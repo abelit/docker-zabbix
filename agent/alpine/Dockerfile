@@ -24,6 +24,7 @@ RUN set -eux && \
     apk add --no-cache --clean-protected \
             tini \
             bash \
+            tzdata \
             coreutils \
             iputils \
             libcurl \
@@ -50,8 +51,7 @@ RUN set -eux && \
             g++ \
             pcre-dev \
             make \
-            git \
-            coreutils && \
+            git && \
     cd /tmp/ && \
     git clone ${ZBX_SOURCES} --branch ${ZBX_VERSION} --depth 1 --single-branch zabbix-${ZBX_VERSION} && \
     cd /tmp/zabbix-${ZBX_VERSION} && \

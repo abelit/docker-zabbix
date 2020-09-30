@@ -160,6 +160,18 @@ The varable is PHP ``upload_max_filesize`` option. By default, value is `2M`.
 
 The varable is PHP ``max_input_time`` option. By default, value is `300`.
 
+### `ZBX_DENY_GUI_ACCESS`
+
+Enable (``true``) maintenance mode for Zabbix web-interface.
+
+### `ZBX_GUI_ACCESS_IP_RANGE`
+
+Array of IP addresses which are allowed for accessing to Zabbix web-interface during maintenance period.
+
+### `ZBX_GUI_WARNING_MSG`
+
+Information message about maintenance period for Zabbix web-interface.
+
 ### `ZBX_DB_ENCRYPTION`
 
 The variable allows to activate encryption for connections to Zabbix database. Even if no other environment variables are specified, connections will be TLS-encrypted if `ZBX_DB_ENCRYPTION=true` specified. Available since 5.0.0. Disabled by default.
@@ -180,6 +192,10 @@ The variable allows to specify the full path to a valid TLS certificate authorit
 
 The variable allows to activate host verification. Available since 5.0.0.
 
+## `ZBX_SSO_SETTINGS`
+
+The variable allows to specify custom SSO settings in JSON format. Available since 5.0.0.
+
 ## Allowed volumes for the Zabbix web interface container
 
 ### ``/etc/ssl/apache2``
@@ -187,6 +203,10 @@ The variable allows to activate host verification. Available since 5.0.0.
 The volume allows to enable HTTPS for the Zabbix web interface. The volume must contains two files ``ssl.crt`` and ``ssl.key`` prepared for Apache2 SSL connections.
 
 Please follow official Apache2 [documentation](https://httpd.apache.org/docs/2.4/ssl/ssl_howto.html) to get more details about how to create certificate files.
+
+### ``/etc/zabbix/web/certs``
+
+The volume allows to use custom certificates for SAML authentification. The volume must contains three files ``sp.key``, ``sp.crt`` and ``idp.crt``. Available since 5.0.0.
 
 # The image variants
 

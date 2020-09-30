@@ -66,9 +66,11 @@ RUN set -eux && \
     rm -rf /usr/share/zabbix-${ZBX_VERSION}/ && \
     cd /usr/share/zabbix/ && \
     rm -f conf/zabbix.conf.php && \
+    rm -f conf/maintenance.inc.php && \
     rm -rf tests && \
     ./locale/make_mo.sh && \
     ln -s "/etc/zabbix/web/zabbix.conf.php" "/usr/share/zabbix/conf/zabbix.conf.php" && \
+    ln -s "/etc/zabbix/web/maintenance.inc.php" "/usr/share/zabbix/conf/maintenance.inc.php" && \
     cat /usr/share/zabbix/include/locales.inc.php | grep display | grep true | awk '{$1=$1};1' | \
                 cut -d"'" -f 2 | sort | \
                 xargs -I '{}' bash -c 'echo "{}" && localedef -c -i {} -f UTF-8 {}.UTF-8 2>/dev/null' && \
@@ -81,6 +83,9 @@ RUN set -eux && \
     chown --quiet -R zabbix:root /run/httpd/ /var/lib/php/session/ && \
     chgrp -R 0 /run/httpd/ /var/lib/php/session/ && \
     chmod -R g=u /run/httpd/ /var/lib/php/session/ && \
+    chown --quiet -R zabbix:root /usr/share/zabbix/include/defines.inc.php && \
+    chgrp -R 0 /usr/share/zabbix/include/defines.inc.php && \
+    chmod -R g=u /usr/share/zabbix/include/defines.inc.php && \
     yum -y history undo `yum -q history | sed -n 3p |column -t | cut -d' ' -f1` && \
     yum -y clean all && \
     rm -rf /var/cache/yum /var/lib/yum/yumdb/* /usr/lib/udev/hwdb.d/* && \

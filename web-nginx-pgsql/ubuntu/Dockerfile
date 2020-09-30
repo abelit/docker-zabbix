@@ -59,7 +59,7 @@ RUN set -eux && \
     rm -rf /var/cache/nginx/ && \
     rm -f /etc/php/7.2/fpm/pool.d/www.conf && \
     ln -sf /dev/fd/2 /var/log/nginx/error.log && \
-    DEBIAN_FRONTEND=noninteractive apt-get -y purge curl gpg dirmngr gpg-agent && \
+    DEBIAN_FRONTEND=noninteractive apt-get -y purge gpg dirmngr gpg-agent && \
     apt-get -y autoremove && \
     apt-get -y clean && \
     rm -rf /var/lib/apt/lists/*
@@ -88,9 +88,11 @@ RUN set -eux && \
     rm -rf /usr/share/zabbix-${ZBX_VERSION}/ && \
     cd /usr/share/zabbix/ && \
     rm -f conf/zabbix.conf.php && \
+    rm -f conf/maintenance.inc.php && \
     rm -rf tests && \
     ./locale/make_mo.sh && \
     ln -s "/etc/zabbix/web/zabbix.conf.php" "/usr/share/zabbix/conf/zabbix.conf.php" && \
+    ln -s "/etc/zabbix/web/maintenance.inc.php" "/usr/share/zabbix/conf/maintenance.inc.php" && \
     ./locale/make_mo.sh && \
     mkdir -p /var/lib/locales/supported.d/ && \
     rm -f /var/lib/locales/supported.d/local && \
@@ -109,6 +111,9 @@ RUN set -eux && \
     chown --quiet -R zabbix:root /var/lib/php/session/ && \
     chgrp -R 0 /var/lib/php/session/ && \
     chmod -R g=u /var/lib/php/session/ && \
+    chown --quiet -R zabbix:root /usr/share/zabbix/include/defines.inc.php && \
+    chgrp -R 0 /usr/share/zabbix/include/defines.inc.php && \
+    chmod -R g=u /usr/share/zabbix/include/defines.inc.php && \
     DEBIAN_FRONTEND=noninteractive apt-get -y purge \
             gettext \
             git && \

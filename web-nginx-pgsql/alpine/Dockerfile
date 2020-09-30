@@ -70,9 +70,11 @@ RUN set -eux && \
     rm -rf /usr/share/zabbix-${ZBX_VERSION}/ && \
     cd /usr/share/zabbix/ && \
     rm -f conf/zabbix.conf.php && \
+    rm -f conf/maintenance.inc.php && \
     rm -rf tests && \
     ./locale/make_mo.sh && \
     ln -s "/etc/zabbix/web/zabbix.conf.php" "/usr/share/zabbix/conf/zabbix.conf.php" && \
+    ln -s "/etc/zabbix/web/maintenance.inc.php" "/usr/share/zabbix/conf/maintenance.inc.php" && \
     chown --quiet -R zabbix:root /etc/zabbix/ && \
     chgrp -R 0 /etc/zabbix/ && \
     chmod -R g=u /etc/zabbix/ && \
@@ -82,6 +84,9 @@ RUN set -eux && \
     chown --quiet -R zabbix:root /var/lib/php/session/ /var/lib/nginx/ && \
     chgrp -R 0 /var/lib/php/session/ /var/lib/nginx/ && \
     chmod -R g=u /var/lib/php/session/ /var/lib/nginx/ && \
+    chown --quiet -R zabbix:root /usr/share/zabbix/include/defines.inc.php && \
+    chgrp -R 0 /usr/share/zabbix/include/defines.inc.php && \
+    chmod -R g=u /usr/share/zabbix/include/defines.inc.php && \
     apk del --purge --no-network \
             build-dependencies && \
     rm -rf /var/cache/apk/*

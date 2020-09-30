@@ -31,8 +31,9 @@ RUN set -eux && \
     mkdir -p /usr/lib/zabbix/externalscripts && \
     mkdir -p /usr/share/doc/zabbix-proxy-sqlite3 && \
     yum --quiet makecache && \
-    yum -y install https://repo.zabbix.com/non-supported/rhel/7/x86_64/fping-3.10-1.el7.x86_64.rpm --setopt=tsflags=nodocs && \
+    yum -y install epel-release && \
     yum -y install --setopt=tsflags=nodocs \
+            fping \
             libcurl \
             libxml2 \
             net-snmp-libs \
@@ -53,7 +54,7 @@ RUN set -eux && \
         gpg --keyserver "$server" --recv-keys 595E85A6B1B4779EA4DAAEC70B588DFF0527A9B7 && break || : ; \
     done && \
     gpg --batch --verify /tmp/tini.asc /sbin/tini && \
-    rm -r "$GNUPGHOME" /tmp/tini.asc && \
+    rm -rf "$GNUPGHOME" /tmp/tini.asc && \
     chmod +x /sbin/tini && \
     yum -y clean all && \
     rm -rf /var/cache/yum /var/lib/yum/yumdb/* /usr/lib/udev/hwdb.d/* && \
