@@ -11,22 +11,20 @@ fi
 
 # Default Zabbix installation name
 # Used only by Zabbix web-interface
-ZBX_SERVER_NAME=${ZBX_SERVER_NAME:-"Zabbix docker"}
+: ${ZBX_SERVER_NAME:="Zabbix docker"}
 # Default Zabbix server host
-ZBX_SERVER_HOST=${ZBX_SERVER_HOST:-"zabbix-server"}
+: ${ZBX_SERVER_HOST:="zabbix-server"}
 # Default Zabbix server port number
-ZBX_SERVER_PORT=${ZBX_SERVER_PORT:-"10051"}
+: ${ZBX_SERVER_PORT:="10051"}
 
 # Default timezone for web interface
-PHP_TZ=${PHP_TZ:-"Europe/Riga"}
+: ${PHP_TZ:="Europe/Riga"}
 
 # Default directories
-# User 'zabbix' home directory
-ZABBIX_USER_HOME_DIR="/var/lib/zabbix"
 # Configuration files directory
 ZABBIX_ETC_DIR="/etc/zabbix"
 # Web interface www-root directory
-ZBX_FRONTEND_PATH="/usr/share/zabbix"
+ZABBIX_WWW_ROOT="/usr/share/zabbix"
 
 # usage: file_env VAR [DEFAULT]
 # as example: file_env 'MYSQL_PASSWORD' 'zabbix'
@@ -176,6 +174,17 @@ prepare_zbx_web_config() {
     export ZBX_SERVER_HOST=${ZBX_SERVER_HOST}
     export ZBX_SERVER_PORT=${ZBX_SERVER_PORT:-"10051"}
     export ZBX_SERVER_NAME=${ZBX_SERVER_NAME}
+
+    FCGI_READ_TIMEOUT=$(expr ${ZBX_MAXEXECUTIONTIME} + 1)
+    sed -i \
+        -e "s/{FCGI_READ_TIMEOUT}/${FCGI_READ_TIMEOUT}/g" \
+    "$ZABBIX_ETC_DIR/nginx.conf"
+
+    if [ -f "$ZABBIX_ETC_DIR/nginx_ssl.conf" ]; then
+        sed -i \
+            -e "s/{FCGI_READ_TIMEOUT}/${FCGI_READ_TIMEOUT}/g" \
+        "$ZABBIX_ETC_DIR/nginx_ssl.conf"
+    fi
 
     if [ "${ENABLE_WEB_ACCESS_LOG:-"true"}" == "false" ]; then
         sed -ri \
